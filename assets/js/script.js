@@ -10,6 +10,48 @@
 
 var mainEl = document.querySelector("#main");
 var timerEl = document.querySelector("#timer");
+var quizQuestions = [
+    {
+        question: "sample questions 1?",
+        answer1: "answer 1",
+        answer2: "answer 2",
+        answer3: "answer 3",
+        answer4: "answer 4",
+        correctAnswer: "answer 4"
+    },
+    {
+        question: "sample questions 2?",
+        answer1: "answer 1",
+        answer2: "answer 2",
+        answer3: "answer 3",
+        answer4: "answer 4",
+        correctAnswer: "answer 3"
+    },
+    {
+        question: "sample questions 3?",
+        answer1: "answer 1",
+        answer2: "answer 2",
+        answer3: "answer 3",
+        answer4: "answer 4",
+        correctAnswer: "answer 2"
+    },
+    {
+        question: "sample questions 4?",
+        answer1: "answer 1",
+        answer2: "answer 2",
+        answer3: "answer 3",
+        answer4: "answer 4",
+        correctAnswer: "answer 1"
+    },
+    {
+        question: "sample questions 5?",
+        answer1: "answer 1",
+        answer2: "answer 2",
+        answer3: "answer 3",
+        answer4: "answer 4",
+        correctAnswer: "answer 4"
+    }
+]
 
 // function to bring to start of the game and start quiz
 var startGame = function(){
