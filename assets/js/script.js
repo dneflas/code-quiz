@@ -8,48 +8,49 @@
 // ** initials and score are saved to local storage
 // ***optional - feature to clear out high score
 
+var headerEl = document.querySelector("#header");
 var mainEl = document.querySelector("#main");
 var timerEl = document.querySelector("#timer");
 var quizQuestions = [
     {
-        question: "sample questions 1?",
-        answer1: "answer 1",
-        answer2: "answer 2",
-        answer3: "answer 3",
-        answer4: "answer 4",
-        correctAnswer: "answer 4"
+        question: "Commonly used data types DO NOT include:",
+        answer1: "strings",
+        answer2: "booleans",
+        answer3: "alerts",
+        answer4: "numbers",
+        correctAnswer: "alerts"
     },
     {
-        question: "sample questions 2?",
-        answer1: "answer 1",
-        answer2: "answer 2",
-        answer3: "answer 3",
-        answer4: "answer 4",
-        correctAnswer: "answer 3"
+        question: "The condition in an if/else statement is enclosed with __________.",
+        answer1: "quotes",
+        answer2: "curly brackets",
+        answer3: "parenthesis",
+        answer4: "square brackets",
+        correctAnswer: "parenthesis"
     },
     {
-        question: "sample questions 3?",
-        answer1: "answer 1",
-        answer2: "answer 2",
-        answer3: "answer 3",
-        answer4: "answer 4",
-        correctAnswer: "answer 2"
+        question: "Arrays in Javascript can be used to store __________.",
+        answer1: "numbers and strings",
+        answer2: "other arrays",
+        answer3: "booleans",
+        answer4: "all of the above",
+        correctAnswer: "all of the above"
     },
     {
-        question: "sample questions 4?",
-        answer1: "answer 1",
-        answer2: "answer 2",
-        answer3: "answer 3",
-        answer4: "answer 4",
-        correctAnswer: "answer 1"
+        question: "String values must be enclosed withing __________ when being assigned to variables.",
+        answer1: "variables",
+        answer2: "commas",
+        answer3: "curly brackets",
+        answer4: "quotes",
+        correctAnswer: "quotes"
     },
     {
-        question: "sample questions 5?",
-        answer1: "answer 1",
-        answer2: "answer 2",
-        answer3: "answer 3",
-        answer4: "answer 4",
-        correctAnswer: "answer 4"
+        question: "A very useful tool used during development and debugging for printing content to the debugger is:",
+        answer1: "JavaScript",
+        answer2: "terminal/bash",
+        answer3: "for loops",
+        answer4: "console.log",
+        correctAnswer: "console.log"
     }
 ]
 
@@ -73,8 +74,62 @@ var startGame = function(){
         mainEl.removeChild(instructionsEl);
         mainEl.removeChild(startButtonEl);
         countdown();
-
+        quizLogic();
+        // end game function
     });
+};
+
+// quiz logic funtion
+var quizLogic = function(){
+    for (i = 0; i < quizQuestions.length; i++){
+        var questionEl = document.createElement("h2");
+        questionEl.textContent = quizQuestions[i].question;
+        var answersEl = document.createElement("ol");
+        var answerLi1 = document.createElement("li");
+        answerLi1.textContent = quizQuestions[i].answer1;
+        var answerLi2 = document.createElement("li");
+        answerLi2.textContent = quizQuestions[i].answer2;
+        var answerLi3 = document.createElement("li");
+        answerLi3.textContent = quizQuestions[i].answer3;
+        var answerLi4 = document.createElement("li");
+        answerLi4.textContent = quizQuestions[i].answer4;
+
+        answersEl.appendChild(answerLi1);
+        answersEl.appendChild(answerLi2);
+        answersEl.appendChild(answerLi3);
+        answersEl.appendChild(answerLi4);
+        mainEl.appendChild(questionEl);
+        mainEl.appendChild(answersEl);
+
+        // THIS DOESNT WORK
+        answersEl.addEventListener("click", function(event){
+            var targetEl = event.target;
+            var questionsObj = quizQuestions[i]
+            var correctAnswer = questionsObj.correctAnswer;
+            console.log(targetEl.textContent);
+
+            mainEl.removeChild(questionEl);
+            mainEl.removeChild(answersEl);
+
+            if (timeLeft > 0){
+                if (targetEl.textContent === correctAnswer){
+                    // new element correct answer
+                    var correctAnswerEl = document.createElement("h3");
+                    correctAnswerEl.textContent = "Correct!";
+                    mainEl.appendChild(correctAnswerEl);
+                } else {
+                    // new element for incorrect answer
+                    var incorrectAnswerEl = document.createElement("h3")
+                    incorrectAnswerEl.textContent ="Incorrect!";
+                    mainEl.appendChild(incorrectAnswerEl);
+                    
+                    timeLeft = Math.max(0, timeLeft-10);
+                };    
+            } else {
+                // end game function
+            }
+        });
+    };
 };
 
 // timer function
@@ -89,7 +144,7 @@ var countdown = function(){
         } else {
             timerEl.textContent = "Time Remaing: 0";
             timerEl.addClass = "";
-            clearInterval(setInterval);
+            clearInterval(timeInterval);
         };
     }, 1000);
 };
