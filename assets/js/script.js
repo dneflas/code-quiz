@@ -11,6 +11,8 @@
 var headerEl = document.querySelector("#header");
 var mainEl = document.querySelector("#main");
 var timerEl = document.querySelector("#timer");
+var i = 0;
+var timeLeft = 60;
 var quizQuestions = [
     {
         question: "Commonly used data types DO NOT include:",
@@ -56,6 +58,12 @@ var quizQuestions = [
 
 // function to bring to start of the game and start quiz
 var startGame = function(){
+    var scoreLinkEl = document.createElement("div");
+    scoreLinkEl.textContent = "View high score";
+    headerEl.appendChild(scoreLinkEl);
+    timerEl = document.createElement("div");
+    headerEl.appendChild(timerEl);
+
     var titleEl = document.createElement("h1");
     titleEl.textContent = "Coding Quiz Challenge";
     mainEl.appendChild(titleEl);
@@ -75,66 +83,86 @@ var startGame = function(){
         mainEl.removeChild(startButtonEl);
         countdown();
         quizLogic();
-        // end game function
     });
 };
 
 // quiz logic funtion
 var quizLogic = function(){
-    for (i = 0; i < quizQuestions.length; i++){
-        var questionEl = document.createElement("h2");
-        questionEl.textContent = quizQuestions[i].question;
-        var answersEl = document.createElement("ol");
-        var answerLi1 = document.createElement("li");
-        answerLi1.textContent = quizQuestions[i].answer1;
-        var answerLi2 = document.createElement("li");
-        answerLi2.textContent = quizQuestions[i].answer2;
-        var answerLi3 = document.createElement("li");
-        answerLi3.textContent = quizQuestions[i].answer3;
-        var answerLi4 = document.createElement("li");
-        answerLi4.textContent = quizQuestions[i].answer4;
+    var questionEl = document.createElement("h2");
+    questionEl.textContent = quizQuestions[i].question;
+    var answersEl = document.createElement("div");
+    var answerLi1 = document.createElement("button");
+    answerLi1.textContent = quizQuestions[i].answer1;
+    answerLi1.className = "answer-choice";
+    var answerLi2 = document.createElement("button");
+    answerLi2.textContent = quizQuestions[i].answer2;
+    answerLi2.className = "answer-choice";
+    var answerLi3 = document.createElement("button");
+    answerLi3.textContent = quizQuestions[i].answer3;
+    answerLi3.className = "answer-choice";
+    var answerLi4 = document.createElement("button");
+    answerLi4.textContent = quizQuestions[i].answer4;
+    answerLi4.className = "answer-choice";
 
-        answersEl.appendChild(answerLi1);
-        answersEl.appendChild(answerLi2);
-        answersEl.appendChild(answerLi3);
-        answersEl.appendChild(answerLi4);
-        mainEl.appendChild(questionEl);
-        mainEl.appendChild(answersEl);
 
-        // THIS DOESNT WORK
-        answersEl.addEventListener("click", function(event){
-            var targetEl = event.target;
-            var questionsObj = quizQuestions[i]
-            var correctAnswer = questionsObj.correctAnswer;
-            console.log(targetEl.textContent);
+    answersEl.appendChild(answerLi1);
+    answersEl.appendChild(answerLi2);
+    answersEl.appendChild(answerLi3);
+    answersEl.appendChild(answerLi4);
+    mainEl.appendChild(questionEl);
+    mainEl.appendChild(answersEl);
 
-            mainEl.removeChild(questionEl);
-            mainEl.removeChild(answersEl);
 
-            if (timeLeft > 0){
-                if (targetEl.textContent === correctAnswer){
-                    // new element correct answer
-                    var correctAnswerEl = document.createElement("h3");
-                    correctAnswerEl.textContent = "Correct!";
-                    mainEl.appendChild(correctAnswerEl);
-                } else {
-                    // new element for incorrect answer
-                    var incorrectAnswerEl = document.createElement("h3")
-                    incorrectAnswerEl.textContent ="Incorrect!";
-                    mainEl.appendChild(incorrectAnswerEl);
-                    
-                    timeLeft = Math.max(0, timeLeft-10);
-                };    
-            } else {
-                // end game function
-            }
-        });
-    };
+    // click function of answer
+    answersEl.addEventListener("click", function(event){
+        var targetEl = event.target;
+        var questionsObj = quizQuestions[i]
+        var correctAnswer = questionsObj.correctAnswer;
+
+        questionEl.parentNode.removeChild(questionEl);
+        answersEl.parentNode.removeChild(answersEl);
+        // correctAnswerEl.parentNode.removeChild(correctAnswerEl);
+        // incorrectAnswerEl.parentNode.removeChild(incorrectAnswerEl);
+
+        if( targetEl.textContent !== correctAnswer){
+            timeLeft = Math.max(0, timeLeft-10);
+        };
+        
+        // if (targetEl.textContent === correctAnswer){
+        //     // new element correct answer
+        //     var correctAnswerEl = document.createElement("h3");
+        //     // correctAnswerEl.textContent = "Correct!";
+        //     // mainEl.appendChild(correctAnswerEl);
+        // } else {
+        //     // new element for incorrect answer
+        //     var incorrectAnswerEl = document.createElement("h3")
+        //     // incorrectAnswerEl.textContent ="Incorrect!";
+        //     // mainEl.appendChild(incorrectAnswerEl);
+            
+        //     timeLeft = Math.max(0, timeLeft-10);
+        // };   
+
+        if (timeLeft > 0 && i < quizQuestions.length){
+            quizLogic(i++);
+        } else {
+            endGame();
+        }
+    });   
 };
+
+// end game function
+var endGame = function(){
+    // show score
+    // clear screen
+    //create element to save score and initials
+    // pull high score from local storage
+    //save new score to local storage
+    // function to clear local storage
+
+}
 
 // timer function
 var countdown = function(){
-    var timeLeft = 60;
     var timeInterval = setInterval(function(){
         if (timeLeft >= 0){
             timerEl.textContent = "Time Remaining: " + timeLeft;
@@ -149,4 +177,5 @@ var countdown = function(){
     }, 1000);
 };
 
+// call start to game
 startGame();
