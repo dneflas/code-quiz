@@ -26,3 +26,14 @@ button:hover {
     height: 50px;
 
 }
+
+.question-response {
+    color:#928c8c;
+    font-style: italic;
+    font-size: 35px;
+    font-weight: normal;
+}
+
+.score-buttons {
+    margin: 2px;
+}
