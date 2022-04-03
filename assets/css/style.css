@@ -13,7 +13,6 @@ footer {
 }
 
 h1 {
-    text-align: center;
     font-size: 40px;
 }
 
@@ -37,6 +36,7 @@ button {
 
 input {
     height: 25px;
+    width: 250px;
 }
 
 button:hover {
@@ -46,6 +46,10 @@ button:hover {
 .container {
     width: 50%;
     margin: auto;
+}
+
+.answers-area {
+    width: fit-content;
 }
 
 .answer-choice {
@@ -67,6 +71,15 @@ button:hover {
 
 .score-list {
     list-style-type: none;
+    padding-left: 0;
+}
+
+.score-list li {
+    padding: 10px;
+}
+
+.score-list li:nth-child(odd) {
+    background-color: rgb(237, 130, 237, 20%);
 }
 
 #high-score-button {
@@ -77,4 +90,8 @@ button:hover {
     left: 43%;
     width: 200px;
     height: 50px;
+}
+
+#main-title {
+    text-align: center;
 }

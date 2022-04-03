@@ -3,6 +3,7 @@ var mainEl = document.querySelector("div");
 var timerEl = document.createElement("div");
 var topEl = document.createElement("h1");
 var answersEl = document.createElement("div");
+    answersEl.className = "answers-area";
 var footerEl = document.querySelector("#footer");
 var i = 0;
 var timeLeft = 59;
@@ -73,6 +74,7 @@ var startGame = function(){
     headerEl.appendChild(timerEl);
 
     topEl.textContent = "Coding Quiz Challenge";
+    topEl.setAttribute("id", "main-title");
     mainEl.appendChild(topEl);
 
     var instructionsEl = document.createElement("p");
@@ -165,6 +167,7 @@ var endGame = function(){
     //clear screen
     clearScreen(mainEl);
     // show score page
+    topEl.removeAttribute("id");
     topEl.textContent = "All done!";
     mainEl.appendChild(topEl);
 
@@ -181,7 +184,7 @@ var endGame = function(){
 
     // on submit, add high score to arr save to local storage
     document.querySelector("#submit-button").addEventListener("click", function(){
-
+        
         var userInitials = document.querySelector("#initials").value;
         var userScore = {};
         userScore.initials = userInitials;
@@ -196,12 +199,12 @@ var endGame = function(){
 
 // high score function
 var highScore = function (){
-    
+    topEl.removeAttribute("id");
     clearScreen(headerEl);
     clearScreen(mainEl);
 
     highScoresArr.sort((a,b) => {
-        return a.score -b.score
+        return b.score - a.score;
     });
 
     var highScoreList = document.createElement("ul");
@@ -215,7 +218,7 @@ var highScore = function (){
     };
 
     // display high score
-    topEl.textContent = "High scores";
+    topEl.textContent = "High Scores";
     mainEl.appendChild(topEl);
     mainEl.appendChild(highScoreList);
     
