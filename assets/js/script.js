@@ -51,12 +51,48 @@ var quizQuestions = [
     }
 ]
 
+// function to clear screen
+var clearScreen = function(parent){
+    while(parent.firstChild){
+        parent.removeChild(parent.firstChild);
+    };
+};
+
+// function to reset time and questions
+var reset = function(){
+    i = 0;
+    timeLeft = 59;
+};
+
+// timer function
+var countdown = function(){
+    var timeInterval = setInterval(function(){
+        if (i === quizQuestions.length){
+            clearInterval(timeInterval);
+            timerEl.textContent = "Time Remaining: " + timeLeft;
+        }
+        if (timeLeft > 0){
+            timerEl.textContent = "Time Remaining: " + timeLeft;
+            timeLeft--;
+    
+        } else {
+            timerEl.textContent = "Time Remaining: 0";
+            clearInterval(timeInterval);
+            endGame();
+        };
+    }, 1000);
+};
+
 // function to bring to start of the game and start quiz
 var startGame = function(){
+    // clear old elements from screen and reset time and array
     clearScreen(topEl);
     clearScreen(mainEl);
+    clearScreen(answersEl);
     clearScreen(footerEl);
     reset();
+
+    // retrieve highscore for local storage
     var currentHighScore = JSON.parse(localStorage.getItem("high score"))
     if (!currentHighScore){
         highScoresArr = [];
@@ -64,7 +100,7 @@ var startGame = function(){
         highScoresArr = currentHighScore;
     };
 
-
+    // append elements to the page
     var scoreLinkEl = document.createElement("div");
     scoreLinkEl.textContent = "View high score";
     scoreLinkEl.setAttribute("id", "high-score-button");
@@ -86,12 +122,14 @@ var startGame = function(){
     startButtonEl.setAttribute("id","start-button");
     mainEl.appendChild(startButtonEl);
 
+    // event listener to start timer and quiz questions
     document.querySelector("#start-button").addEventListener("click", function(){
         clearScreen(mainEl);
         countdown();
         quizLogic();
     });
 
+    // event listener for view high score button
     document.querySelector("#high-score-button").addEventListener("click", function(){
         clearScreen(headerEl);
         clearScreen(mainEl);
@@ -102,7 +140,7 @@ var startGame = function(){
 // quiz logic funtion
 var quizLogic = function(){
     if (timeLeft > 0 && i < quizQuestions.length){
-
+        // append elements to page
         var questionEl = document.createElement("h2");
         questionEl.textContent = quizQuestions[i].question;
         var answerLi1 = document.createElement("button");
@@ -131,14 +169,15 @@ var quizLogic = function(){
 
 // click function of answer
 answersEl.addEventListener("click", function(event){
+    // clear old elements from the screen
+    clearScreen(answersEl);
+    clearScreen(mainEl);
+    clearScreen(footerEl);
+    
     var targetEl = event.target;
     var questionsObj = quizQuestions[i]
     var correctAnswer = questionsObj.correctAnswer;
 
-    clearScreen(answersEl);
-    clearScreen(mainEl);
-    clearScreen(footerEl);
-        
     if (targetEl.textContent === correctAnswer){
         // new element correct answer
         var correctAnswerEl = document.createElement("h3");
@@ -154,11 +193,13 @@ answersEl.addEventListener("click", function(event){
         // remove 10 seconds from timer
         timeLeft = Math.max(0, timeLeft-10);
     };  
-
+    
+    // time out function for answer response
     setTimeout(function(){
         clearScreen(footerEl);
     }, 1500);
 
+    // return to quiz logic
     quizLogic(i++);
 });
 
@@ -178,35 +219,39 @@ var endGame = function(){
     scoreEl.addClass = "score";
     mainEl.appendChild(scoreEl);
     //create element to save score and initials
-    var saveScore = document.createElement("div");
+    var saveScore = document.createElement("form");
     saveScore.innerHTML = "<label for='initials'>Enter initials: </label><input type='text' name='initials' id='initials' maxlength='3'/><button type='submit' id='submit-button'>Submit</button>"
     mainEl.appendChild(saveScore);
 
-    // on submit, add high score to arr save to local storage
-    document.querySelector("#submit-button").addEventListener("click", function(){
+    // event listener to push high score to arr save to local storage
+    document.querySelector("#submit-button").addEventListener("click", function(event){
+        event.preventDefault();
         
         var userInitials = document.querySelector("#initials").value;
         var userScore = {};
         userScore.initials = userInitials;
         userScore.score = score;
-        // userInitials +" - "+ score;
         highScoresArr.push(userScore);
         localStorage.setItem("high score", JSON.stringify(highScoresArr));
 
+        // call highscore function
         highScore();
     });
 };
 
 // high score function
 var highScore = function (){
+    //clear old elements from screen
     topEl.removeAttribute("id");
     clearScreen(headerEl);
     clearScreen(mainEl);
 
+    // sort array items by highest score to lowest
     highScoresArr.sort((a,b) => {
         return b.score - a.score;
     });
 
+    // create element to hold high score and pull high scores from array
     var highScoreList = document.createElement("ul");
     highScoreList.className = "score-list";
     
@@ -227,53 +272,23 @@ var highScore = function (){
     backButtonEl.textContent = "Go back";
     backButtonEl.className = "score-buttons";
     backButtonEl.setAttribute("id", "back-button");
-    footerEl.appendChild(backButtonEl);
+    mainEl.appendChild(backButtonEl);
 
     // clear button clears local storage
     var clearHighScoreButtonEl = document.createElement("button");
     clearHighScoreButtonEl.textContent = "Clear high scores";
     clearHighScoreButtonEl.className = "score-buttons";
     clearHighScoreButtonEl.setAttribute("id", "clear-score-button");
-    footerEl.appendChild(clearHighScoreButtonEl);
+    mainEl.appendChild(clearHighScoreButtonEl);
 
+    // event listener for back button
     backButtonEl.addEventListener("click",startGame);
 
+    // event listener for clear button
     clearHighScoreButtonEl.addEventListener("click", function(){
         localStorage.clear();
         clearScreen(highScoreList);
     });
-};
-
-// timer function
-var countdown = function(){
-    var timeInterval = setInterval(function(){
-        if (i === quizQuestions.length){
-            clearInterval(timeInterval);
-            timerEl.textContent = "Time Remaining: " + timeLeft;
-        }
-        if (timeLeft > 0){
-            timerEl.textContent = "Time Remaining: " + timeLeft;
-            timeLeft--;
-    
-        } else {
-            timerEl.textContent = "Time Remaining: 0";
-            clearInterval(timeInterval);
-            endGame();
-        };
-    }, 1000);
-};
-
-// function to clear screen
-var clearScreen = function(parent){
-    while(parent.firstChild){
-        parent.removeChild(parent.firstChild);
-    };
-};
-
-// function to reset time and questions
-var reset = function(){
-    i = 0;
-    timeLeft = 59;
 };
 
 // call start to game
